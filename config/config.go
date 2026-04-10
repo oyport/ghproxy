@@ -26,6 +26,9 @@ type Config struct {
 	RateLimit RateLimitConfig `toml:"rateLimit" wanf:"rateLimit"`
 	Outbound  OutboundConfig  `toml:"outbound" wanf:"outbound"`
 	Docker    DockerConfig    `toml:"docker" wanf:"docker"`
+	Website   WebsiteConfig   `toml:"website" wanf:"website"`
+	Admin     AdminConfig     `toml:"admin" wanf:"admin"`
+	Sponsor   SponsorConfig   `toml:"sponsor" wanf:"sponsor"`
 }
 
 /*
@@ -212,6 +215,51 @@ type DockerConfig struct {
 	AuthPassThrough bool              `toml:"authPassThrough" wanf:"authPassThrough"`
 }
 
+// WebsiteConfig 定义网站自定义配置
+type WebsiteConfig struct {
+	SiteName        string `toml:"siteName" wanf:"siteName"`
+	SiteDescription string `toml:"siteDescription" wanf:"siteDescription"`
+	SiteKeywords    string `toml:"siteKeywords" wanf:"siteKeywords"`
+	// 备案信息
+	ICPNumber string `toml:"icpNumber" wanf:"icpNumber"`
+	// 统计代码
+	AnalyticsCode string `toml:"analyticsCode" wanf:"analyticsCode"`
+	// 自定义页脚
+	FooterText string `toml:"footerText" wanf:"footerText"`
+	// 自定义CSS
+	CustomCSS string `toml:"customCSS" wanf:"customCSS"`
+	// 自定义JS
+	CustomJS string `toml:"customJS" wanf:"customJS"`
+	// 联系方式
+	ContactEmail string `toml:"contactEmail" wanf:"contactEmail"`
+	// 社交链接
+	GitHubUrl  string `toml:"githubUrl" wanf:"githubUrl"`
+	TwitterUrl string `toml:"twitterUrl" wanf:"twitterUrl"`
+}
+
+// SponsorConfig 定义赞助相关配置
+type SponsorConfig struct {
+	// 是否启用赞助功能
+	Enabled bool `toml:"enabled" wanf:"enabled"`
+	// 支付宝二维码图片URL
+	AlipayQRCode string `toml:"alipayQRCode" wanf:"alipayQRCode"`
+	// 微信二维码图片URL
+	WechatQRCode string `toml:"wechatQRCode" wanf:"wechatQRCode"`
+	// USDT钱包地址
+	USDTAddress string `toml:"usdtAddress" wanf:"usdtAddress"`
+	// 赞助说明文字
+	SponsorText string `toml:"sponsorText" wanf:"sponsorText"`
+}
+
+// AdminConfig 定义后台管理配置
+type AdminConfig struct {
+	Enabled  bool   `toml:"enabled" wanf:"enabled"`
+	Username string `toml:"username" wanf:"username"`
+	Password string `toml:"password" wanf:"password"`
+	// 管理后台路径前缀
+	PathPrefix string `toml:"pathPrefix" wanf:"pathPrefix"`
+}
+
 // LoadConfig 从配置文件加载配置
 func LoadConfig(filePath string) (*Config, error) {
 	exist, filePath2read := FileExists(filePath)
@@ -375,6 +423,32 @@ func DefaultConfig() *Config {
 			Credentials: map[string]string{
 				"testpass": "test123",
 			},
+		},
+		Website: WebsiteConfig{
+			SiteName:        "GHProxy",
+			SiteDescription: "GitHub Proxy Server",
+			SiteKeywords:    "github,proxy,download",
+			ICPNumber:       "",
+			AnalyticsCode:   "",
+			FooterText:      "",
+			CustomCSS:       "",
+			CustomJS:        "",
+			ContactEmail:    "",
+			GitHubUrl:       "",
+			TwitterUrl:      "",
+		},
+		Admin: AdminConfig{
+			Enabled:    false,
+			Username:   "admin",
+			Password:   "admin123",
+			PathPrefix: "/admin",
+		},
+		Sponsor: SponsorConfig{
+			Enabled:      false,
+			AlipayQRCode: "",
+			WechatQRCode: "",
+			USDTAddress:  "TNfSYG6F2vkiibd6J6mhhHNWDgWgNdF5hN",
+			SponsorText:  "如果您觉得本项目对您有帮助，欢迎赞助支持！",
 		},
 	}
 }

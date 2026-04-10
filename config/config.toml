@@ -78,3 +78,22 @@ auth = false
 [docker.credentials]
 user1 = "testpass"
 test = "test123"
+
+[website]
+siteName = "GHProxy"
+siteDescription = "GitHub Proxy Server - Fast and Reliable"
+siteKeywords = "github,proxy,download,release"
+icpNumber = ""  # 网站备案号，如：京ICP备12345678号
+analyticsCode = ""  # 统计代码，如：Google Analytics、百度统计等
+footerText = ""  # 自定义页脚文本
+customCSS = ""  # 自定义CSS代码
+customJS = ""  # 自定义JavaScript代码
+contactEmail = ""  # 联系邮箱
+githubUrl = ""  # GitHub链接
+twitterUrl = ""  # Twitter链接
+
+[admin]
+enabled = false  # 是否启用管理后台
+username = "admin"  # 管理员用户名
+password = "admin123"  # 管理员密码（建议修改）
+pathPrefix = "/admin"  # 管理后台路径前缀

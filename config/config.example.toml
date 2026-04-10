@@ -1,0 +1,183 @@
+# GHProxy 配置文件示例 - 启用管理后台
+
+[server]
+host = "0.0.0.0"
+port = 8080
+sizeLimit = 125 # MB
+memLimit = 0 # MB
+cors = "*" # "*"/"" -> "*" ; "nil" -> "" ;
+debug = false
+
+[httpc]
+mode = "auto" # "auto" or "advanced"
+maxIdleConns = 100 # only for advanced mode
+maxIdleConnsPerHost = 60 # only for advanced mode
+maxConnsPerHost = 0 # only for advanced mode
+useCustomRawHeaders = false
+
+[gitclone]
+mode = "bypass" # bypass / cache
+smartGitAddr = "http://127.0.0.1:8080"
+ForceH2C = false
+
+[shell]
+editor = false
+rewriteAPI = false
+
+[pages]
+mode = "internal" # "internal" or "external"
+theme = "bootstrap" # "bootstrap" or "nebula"
+staticDir = "/data/www"
+
+[log]
+logFilePath = "/data/ghproxy/log/ghproxy.log"
+maxLogSize = 5 # MB
+level = "info" # debug, info, warn, error, none
+
+[auth]
+method = "parameters" # "header" or "parameters"
+token = "token"
+key = ""
+enabled = false
+passThrough = false
+ForceAllowApi = false
+ForceAllowApiPassList = false
+
+[blacklist]
+blacklistFile = "/data/ghproxy/config/blacklist.json"
+enabled = false
+
+[whitelist]
+enabled = false
+whitelistFile = "/data/ghproxy/config/whitelist.json"
+
+[ipFilter]
+enabled = false
+enableAllowList = false
+enableBlockList = false
+ipFilterFile = "/data/ghproxy/config/ipfilter.json"
+
+[rateLimit]
+enabled = false
+ratePerMinute = 180
+burst = 5
+
+[rateLimit.bandwidthLimit]
+	enabled = false
+	totalLimit = "100mbps"
+	totalBurst = "100mbps"
+	singleLimit = "10mbps"
+	singleBurst = "10mbps"
+
+[outbound]
+enabled = false
+url = "socks5://127.0.0.1:1080" # "http://127.0.0.1:7890"
+
+[docker]
+enabled = false
+target = "dockerhub" # ghcr/dockerhub/ custom
+auth = false
+[docker.credentials]
+user1 = "testpass"
+test = "test123"
+
+# ========================================
+# 网站自定义配置
+# ========================================
+[website]
+# 网站基本信息
+siteName = "我的GHProxy"
+siteDescription = "快速可靠的GitHub文件下载代理服务"
+siteKeywords = "github,proxy,download,加速,代理"
+
+# 备案信息（中国大陆服务器需要）
+icpNumber = "京ICP备12345678号"
+
+# 统计代码（支持Google Analytics、百度统计等）
+analyticsCode = """
+<!-- Google Analytics Example -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+</script>
+"""
+
+# 自定义页脚文本
+footerText = "© 2024 我的网站. All rights reserved."
+
+# 自定义CSS（可以覆盖默认样式）
+customCSS = """
+<style>
+.footer { background-color: #f8f9fa; }
+.navbar { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+</style>
+"""
+
+# 自定义JavaScript
+customJS = """
+<script>
+console.log('Welcome to my GHProxy!');
+</script>
+"""
+
+# 联系方式
+contactEmail = "admin@example.com"
+
+# 社交链接
+githubUrl = "https://github.com/yourname/ghproxy"
+twitterUrl = "https://twitter.com/yourname"
+
+# ========================================
+# 赞助配置
+# ========================================
+[sponsor]
+# 启用赞助功能
+enabled = true
+
+# 支付宝二维码图片URL
+# 请将您的支付宝收款二维码图片上传到图床，然后填写图片URL
+# 例如：alipayQRCode = "https://example.com/images/alipay-qr.png"
+alipayQRCode = ""
+
+# 微信二维码图片URL
+# 请将您的微信收款二维码图片上传到图床，然后填写图片URL
+# 例如：wechatQRCode = "https://example.com/images/wechat-qr.png"
+wechatQRCode = ""
+
+# USDT钱包地址（TRC20）
+usdtAddress = "TNfSYG6F2vkiibd6J6mhhHNWDgWgNdF5hN"
+
+# 赞助说明文字
+sponsorText = "如果您觉得本项目对您有帮助，欢迎赞助支持，您的赞助将用于服务器开支及开发者时间成本支出，感谢您的支持！"
+
+# ========================================
+# 管理后台配置
+# ========================================
+[admin]
+# 启用管理后台
+enabled = true
+
+# 管理员账号（请务必修改默认密码！）
+username = "admin"
+password = "your_secure_password_here"  # 建议使用强密码
+
+# 管理后台访问路径
+pathPrefix = "/admin"
+
+# ========================================
+# 使用说明
+# ========================================
+# 1. 修改上面的配置项
+# 2. 保存配置文件
+# 3. 启动服务：./ghproxy -c config/config.toml
+# 4. 访问管理后台：http://localhost:8080/admin/
+# 5. 使用配置的用户名和密码登录
+#
+# 安全建议：
+# - 修改默认的管理员密码
+# - 生产环境使用HTTPS
+# - 定期备份配置文件
+# - 考虑使用IP白名单限制管理后台访问

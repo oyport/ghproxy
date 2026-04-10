@@ -11,10 +11,12 @@ import (
 	"strings"
 	"time"
 
+	"ghproxy/admin"
 	"ghproxy/api"
 	"ghproxy/auth"
 	"ghproxy/config"
 	"ghproxy/proxy"
+	"ghproxy/sponsor"
 
 	"github.com/WJQSERVER-STUDIO/httpc"
 	"github.com/fenthope/bauth"
@@ -402,6 +404,20 @@ func main() {
 		}
 	}
 	setupApi(cfg, r, version)
+
+	// 初始化管理后台
+	if cfg.Admin.Enabled {
+		admin.InitAdmin(cfg, cfgfile)
+		admin.SetupAdminRoutes(r, cfg)
+		fmt.Printf("Admin panel enabled at %s\n", cfg.Admin.PathPrefix)
+	}
+
+	// 初始化赞助页面
+	if cfg.Sponsor.Enabled {
+		r.GET("/sponsor", sponsor.SponsorPage(cfg))
+		fmt.Println("Sponsor page enabled at /sponsor")
+	}
+
 	setupPages(cfg, r)
 	r.SetRedirectTrailingSlash(false)
 

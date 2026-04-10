@@ -46,6 +46,10 @@ func InitHandleRouter(cfg *config.Config, r *touka.Engine, version string) {
 		apiRouter.GET("/oci_proxy/status", func(c *touka.Context) {
 			ociProxyStatusHandler(cfg, c)
 		})
+		// 网站配置API
+		apiRouter.GET("/website/config", func(c *touka.Context) {
+			WebsiteConfigHandler(cfg, c)
+		})
 	}
 }
 
@@ -130,4 +134,22 @@ func ociProxyStatusHandler(cfg *config.Config, c *touka.Context) {
 		"enabled": cfg.Docker.Enabled,
 		"target":  cfg.Docker.Target,
 	}))
+}
+
+// WebsiteConfigHandler 返回网站配置信息
+func WebsiteConfigHandler(cfg *config.Config, c *touka.Context) {
+	c.SetHeader("Content-Type", "application/json")
+	c.JSON(200, map[string]interface{}{
+		"siteName":        cfg.Website.SiteName,
+		"siteDescription": cfg.Website.SiteDescription,
+		"siteKeywords":    cfg.Website.SiteKeywords,
+		"icpNumber":       cfg.Website.ICPNumber,
+		"analyticsCode":   cfg.Website.AnalyticsCode,
+		"footerText":      cfg.Website.FooterText,
+		"customCSS":       cfg.Website.CustomCSS,
+		"customJS":        cfg.Website.CustomJS,
+		"contactEmail":    cfg.Website.ContactEmail,
+		"githubUrl":       cfg.Website.GitHubUrl,
+		"twitterUrl":      cfg.Website.TwitterUrl,
+	})
 }

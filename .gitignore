@@ -6,5 +6,7 @@ demo.wanf
 list.json
 iplist.json
 repos
-pages
 *_test
+.arts
+.codeartsdoer
+.github

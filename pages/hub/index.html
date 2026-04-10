@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">GitHub 文件加速</title>
+    <meta name="description" id="pageDescription" content="">
+    <meta name="keywords" id="pageKeywords" content="">
+    <!-- 保持 Hub 主题的图标库和样式 -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="style.css">
+    <!-- 自定义CSS将在此处动态注入 -->
+    <style id="customStyles"></style>
+</head>
+<body>
+    <div class="PageLayout">
+        <header class="AppHeader">
+            <div class="AppHeader-item AppHeader-item--middle">
+                <h1 class="AppHeader-title">GitHub 文件加速</h1>
+            </div>
+        </header>
+
+        <main class="PageLayout-content">
+            <div class="container-md">
+                <div class="Box Box--spacious">
+                    <div class="Box-header">
+                        <h2 class="Box-title">生成加速链接</h2>
+                    </div>
+                    <div class="Box-body">
+                        <p class="text-gray-light mb-3">
+                            为 GitHub 文件、仓库、Release 及 Docker 镜像提供加速服务。
+                        </p>
+                        <form id="github-form">
+                            <div class="form-group">
+                                <label for="githubLinkInput" class="form-label">GitHub 链接</label>
+                                <input type="text" class="form-control input-block" id="githubLinkInput"
+                                    placeholder="输入 GitHub 链接或 Docker 镜像名" 
+                                    aria-describedby="githubLinkError">
+                                <p class="f5 text-gray-light" id="githubLinkError" style="display: none;"></p>
+                            </div>
+                            
+                            <!-- 新增: 分段控件 (Segmented Control) -->
+                            <div class="form-group">
+                                <label class="form-label">选择输出格式:</label>
+                                <div id="format-toggle" class="SegmentedControl">
+                                    <button type="button" class="SegmentedControl-button is-selected" data-value="direct">直接链接</button>
+                                    <button type="button" class="SegmentedControl-button" data-value="git">Git Clone</button>
+                                    <button type="button" class="SegmentedControl-button" data-value="wget">Wget</button>
+                                    <button type="button" class="SegmentedControl-button" data-value="docker">Docker Pull</button>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <span class="material-symbols-outlined">link</span>
+                                生成链接
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="output" class="Box-footer" style="display: none;">
+                        <label for="formattedLinkOutput" class="form-label">加速链接:</label>
+                        <div class="input-group">
+                            <input type="text" id="formattedLinkOutput" class="form-control" readonly>
+                            <div class="input-group-button">
+                                <button id="copyButton" class="btn btn-octicon" title="复制链接" aria-label="复制链接">
+                                    <span class="material-symbols-outlined">content_copy</span>
+                                </button>
+                                <button id="openButton" class="btn btn-octicon" title="在新标签页中打开" aria-label="在新标签页中打开">
+                                    <span class="material-symbols-outlined">open_in_new</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h3 class="h4 mb-2">服务状态</h3>
+                    <!-- 布局容器现在包含所有新的状态卡片 -->
+                    <div class="Layout Layout--flowRow-until-md Layout--gutter">
+                        <div class="Layout-item col-md-6">
+                            <div class="Box d-flex flex-items-center p-3">
+                                <span class="material-symbols-outlined text-gray-light mr-2">download</span>
+                                <div class="flex-auto">
+                                    <span class="text-bold">文件大小限制:</span>
+                                    <span id="sizeLimitDisplay" class="text-gray">...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Layout-item col-md-6">
+                            <div class="Box d-flex flex-items-center p-3">
+                                <span class="material-symbols-outlined text-gray-light mr-2">verified</span>
+                                <div class="flex-auto">
+                                    <span class="text-bold">白名单状态:</span>
+                                    <span id="whiteListStatus" class="text-gray">...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Layout-item col-md-6">
+                            <div class="Box d-flex flex-items-center p-3">
+                                <span class="material-symbols-outlined text-gray-light mr-2">gpp_bad</span>
+                                <div class="flex-auto">
+                                    <span class="text-bold">黑名单状态:</span>
+                                    <span id="blackListStatus" class="text-gray">...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Layout-item col-md-6">
+                            <div class="Box d-flex flex-items-center p-3">
+                                <span class="material-symbols-outlined text-gray-light mr-2">storage</span>
+                                <div class="flex-auto">
+                                    <span class="text-bold">Git Clone 缓存:</span>
+                                    <span id="gitCloneCacheStatus" class="text-gray">...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Layout-item col-md-6">
+                            <div class="Box d-flex flex-items-center p-3">
+                                <span class="material-symbols-outlined text-gray-light mr-2">layers</span>
+                                <div class="flex-auto">
+                                    <span class="text-bold">OCI 代理状态:</span>
+                                    <span id="ociProxyStatus" class="text-gray">...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Layout-item col-md-6">
+                            <div class="Box d-flex flex-items-center p-3">
+                                <span class="material-symbols-outlined text-gray-light mr-2">terminal</span>
+                                <div class="flex-auto">
+                                    <span class="text-bold">Shell Nest 状态:</span>
+                                    <span id="shellNestStatus" class="text-gray">...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="AppFooter">
+            <div class="container-md">
+                <p id="footerContent" class="text-gray-light">
+                    Copyright © 2024-<script>document.write(new Date().getFullYear());</script> WJQSERVER-STUDIO
+                </p>
+                <p>
+                    <a href="https://github.com/WJQSERVER-STUDIO/ghproxy" class="Link--secondary">GitHub 仓库</a> |
+                    <a href="https://t.me/ghproxy_go" class="Link--secondary">Telegram 交流群</a>
+                </p>
+                <p id="icpInfo" style="display: none;"></p>
+                <p id="contactInfo" style="display: none;"></p>
+            </div>
+        </footer>
+    </div>
+
+    <div class="flash-container"></div>
+    <div id="versionBadge" class="version-badge" style="display: none;"></div>
+    <script src="script.js"></script>
+</body>
+</html>

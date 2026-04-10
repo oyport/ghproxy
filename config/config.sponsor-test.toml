@@ -1,0 +1,138 @@
+# GHProxy 赞助功能测试配置
+# 这是一个最小化的配置文件，用于快速测试赞助功能
+
+[server]
+host = "0.0.0.0"
+port = 8080
+sizeLimit = 125
+memLimit = 0
+cors = "*"
+debug = true  # 开启调试模式
+
+[httpc]
+mode = "auto"
+maxIdleConns = 100
+maxIdleConnsPerHost = 60
+maxConnsPerHost = 0
+useCustomRawHeaders = false
+
+[gitclone]
+mode = "bypass"
+smartGitAddr = "http://127.0.0.1:8080"
+ForceH2C = false
+
+[shell]
+editor = false
+rewriteAPI = false
+
+[pages]
+mode = "internal"
+theme = "bootstrap"
+staticDir = "/data/www"
+
+[log]
+logFilePath = "/data/ghproxy/log/ghproxy.log"
+maxLogSize = 5
+level = "debug"  # 使用debug级别查看详细日志
+
+[auth]
+method = "parameters"
+token = "token"
+key = ""
+enabled = false
+passThrough = false
+ForceAllowApi = false
+ForceAllowApiPassList = false
+
+[blacklist]
+blacklistFile = "/data/ghproxy/config/blacklist.json"
+enabled = false
+
+[whitelist]
+enabled = false
+whitelistFile = "/data/ghproxy/config/whitelist.json"
+
+[ipFilter]
+enabled = false
+enableAllowList = false
+enableBlockList = false
+ipFilterFile = "/data/ghproxy/config/ipfilter.json"
+
+[rateLimit]
+enabled = false
+ratePerMinute = 180
+burst = 5
+
+[rateLimit.bandwidthLimit]
+enabled = false
+totalLimit = "100mbps"
+totalBurst = "100mbps"
+singleLimit = "10mbps"
+singleBurst = "10mbps"
+
+[outbound]
+enabled = false
+url = "socks5://127.0.0.1:1080"
+
+[docker]
+enabled = false
+target = "dockerhub"
+auth = false
+[docker.credentials]
+user1 = "testpass"
+test = "test123"
+
+[website]
+siteName = "GHProxy 赞助测试"
+siteDescription = "测试赞助功能"
+siteKeywords = "github,proxy,sponsor"
+icpNumber = ""
+analyticsCode = ""
+footerText = ""
+customCSS = ""
+customJS = ""
+contactEmail = ""
+githubUrl = ""
+twitterUrl = ""
+
+# ========================================
+# 赞助配置 - 测试用
+# ========================================
+[sponsor]
+# 启用赞助功能
+enabled = true
+
+# 支付宝二维码（使用示例图片）
+alipayQRCode = "https://via.placeholder.com/200x200/1677FF/FFFFFF?text=支付宝"
+
+# 微信二维码（使用示例图片）
+wechatQRCode = "https://via.placeholder.com/200x200/07C160/FFFFFF?text=微信"
+
+# USDT钱包地址
+usdtAddress = "TNfSYG6F2vkiibd6J6mhhHNWDgWgNdF5hN"
+
+# 赞助说明
+sponsorText = "这是一个测试配置，二维码为示例图片。请替换为您的真实收款码！"
+
+[admin]
+enabled = false
+username = "admin"
+password = "admin123"
+pathPrefix = "/admin"
+
+# ========================================
+# 测试说明
+# ========================================
+# 1. 使用此配置启动服务：
+#    ./ghproxy -c config/config.sponsor-test.toml
+#
+# 2. 访问赞助页面：
+#    http://localhost:8080/sponsor
+#
+# 3. 您会看到示例二维码图片
+#
+# 4. 测试成功后，请：
+#    - 准备您的真实收款二维码
+#    - 上传到图床获取URL
+#    - 修改配置文件中的二维码URL
+#    - 重启服务
